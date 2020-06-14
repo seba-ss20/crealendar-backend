@@ -1,0 +1,17 @@
+{
+  "name": "crealendar-backend",
+  "version": "1.0.0",
+  "description": "Team 32 project for SEBA Master",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Team 32",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.5.8",
+    "mongoose": "^5.9.18"
+  },
+  "devDependencies": {}
+}
