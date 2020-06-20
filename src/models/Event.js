@@ -18,12 +18,12 @@ const eventSchema = mongoose.Schema ({
 	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User'
+		ref: 'User',
 		required: true,
 		unique: true
 	}
 })
 
-const Event = mongoose.model('Event', caseSchema)
+const Event = mongoose.model('Event', eventSchema)
 
 module.exports = Event

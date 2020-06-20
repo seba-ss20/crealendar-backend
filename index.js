@@ -1,25 +1,33 @@
 "use strict";
+const http       = require('http');
+const mongoose   = require('mongoose');
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const api        = require('./src/api');
+const config     = require('./src/config');
+
+// Set the port to the API.
+api.set('port', config.port);
+
+//Create a http server based on Express
+const server = http.createServer(api);
 
 
-const port = 3001;
+//Connect to the MongoDB database; then start the server
+mongoose
+    .connect(config.mongoURI)
+    .then(() => server.listen(config.port))
+    .catch(err => {
+        console.log('Error connecting to the database', err.message);
+        process.exit(err.statusCode);
+    });
 
 
-mongoose.connect('mongodb://localhost:3002', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: true,
-    useUnifiedTopology: true
-})
+server.on('listening', () => {
+    console.log(`API is running in port ${config.port}`);
+});
 
-const app = express();
-app.use(express.json())
-app.use(cors());
-
-app.listen(port, function () {
-	console.log("Server running on port "+ port);
+server.on('error', (err) => {
+    console.log('Error in the server', err.message);
+    process.exit(err.statusCode);
 });
 
