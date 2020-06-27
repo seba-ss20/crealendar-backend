@@ -1,5 +1,5 @@
 const config     = require('../config');
-const UserModel  = require('../models/User');
+const UserProfileModel  = require('../models/UserProfile');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -15,7 +15,7 @@ const login = async (req,res) => {
     });
 
     try {
-        let user = await UserModel.findOne({username: req.body.username}).exec();
+        let user = await UserProfileModel.findOne({username: req.body.username}).exec();
         // check if the password is valid
         const isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
         if (!isPasswordValid) {
@@ -26,8 +26,8 @@ const login = async (req,res) => {
 
         // if user is found and password is valid
         // create a token
-        const token = user.tokens[0].token
-        return res.status(200).json({token: token});
+        const token = jwt.sign({id: user._id, username: user.username}, config.JwtSecret, { expiresIn: "30d" });
+        return res.status(200).json({token: token, role: user.role});
     } catch(err) {
         return res.status(404).json({
             error: 'User Not Found',
@@ -51,13 +51,13 @@ const register = async (req,res) => {
     const user = Object.assign(req.body, {password: req.body.password});
 
     try {
-        let retUser = await UserModel.create(user);
 
+        let retUser = await UserProfileModel.create(user);
         // if user is registered without errors
         // create a token
-        const token = user.tokens[0].token
+        const token = jwt.sign({id: user._id, username: user.username}, config.JwtSecret, { expiresIn: "30d" });
 
-        res.status(200).json({token: token});
+        res.status(200).json({token: token, role: user.role});
     } catch(err) {
         if (err.code == 11000) {
             return res.status(400).json({
