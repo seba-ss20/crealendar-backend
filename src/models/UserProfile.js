@@ -16,6 +16,9 @@ const userProfileSchema = mongoose.Schema({
     role: {
         type: String,
         required: true
+    },
+    calendar :{
+        type: Boolean,
     }
 })
 
