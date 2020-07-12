@@ -7,7 +7,8 @@ const helmet     = require('helmet');
 const middlewares = require('./middleware');
 
 const auth  = require('./router/auth');
-
+const event  = require('./router/event');
+const tag = require('./router/tag');
 
 const api = express();
 
@@ -27,6 +28,7 @@ api.get('/', (req, res) => {
 
 // API routes
 api.use('/auth'  , auth);
-
+api.use('/event', event);
+api.use('/tag', tag);
 
 module.exports = api;

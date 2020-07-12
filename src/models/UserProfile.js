@@ -16,7 +16,14 @@ const userProfileSchema = mongoose.Schema({
     role: {
         type: String,
         required: true
-    }
+    },
+    calendar :{
+        uploaded: Boolean,
+        uploadDate: String,
+    },
+
+    tags : [String],
+    showNearMe: Boolean,
 })
 
 // Hash the password before saving the user model
