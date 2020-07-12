@@ -26,8 +26,10 @@ const uploadCalendar = async (req,res) => {
         error: 'Bad Request',
         message: 'The request body must contain a events property'
     });
-    let events = Object.assign({}, req.body.events.events);
+
+    let events = Object.assign({}, req.body.events).events;
     let username = req.body.username;
+
 
     try {
         let user = await EventModel.findOne({username: username}).exec();
@@ -37,10 +39,12 @@ const uploadCalendar = async (req,res) => {
         // console.log(events.events.length);
 
         let r_events = [];
+        console.log(events);
 
-        for(let i = 0 ; i < events.length ; i++)
-        {
+        for(let i = 0 ; i < events.length ; i++){
 
+            console.log('Processing Event ' + i);
+            events[i]['source'] = 'calendar';
             let doesEventExist = await EventModel.countDocuments({ eventID: events[i].eventID }).exec() > 0;
             console.log( EventModel.countDocuments({ eventID: events[i].eventID }).exec());
 
@@ -56,8 +60,9 @@ const uploadCalendar = async (req,res) => {
             }
 
         }
-
-        let userC = await UserProfileModel.findOneAndUpdate({username:username},{ $set : {calendar:true}},{returnNewDocument: true});
+        let now = new Date();
+        console.log('Adding Time for calendar' + new Date(now).toUTCString());
+        let userC = await UserProfileModel.findOneAndUpdate({username:username},{ $set : {calendar:{uploaded: true, uploadedDate: new Date(now).toUTCString()}}},{returnNewDocument: true});
         console.log(userC);
 
         return res.status(200).json(r_events);

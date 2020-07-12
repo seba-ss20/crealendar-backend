@@ -18,7 +18,8 @@ const userProfileSchema = mongoose.Schema({
         required: true
     },
     calendar :{
-        type: Boolean,
+        uploaded: Boolean,
+        uploadedDate: String,
     }
 })
 
