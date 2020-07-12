@@ -41,7 +41,7 @@ const eventSchema = mongoose.Schema ({
 		type: String,
 		required: true
 	},
-	categories: [String], // TODO :: Make it an array of numbers from Categories table.
+	tags: [String], // TODO :: Make it an array of numbers from Categories table.
 
 	// owner: {
 	// 	type: mongoose.Schema.Types.ObjectId,

@@ -62,10 +62,10 @@ const uploadCalendar = async (req,res) => {
         }
         let now = new Date();
         console.log('Adding Time for calendar' + new Date(now).toUTCString());
-        let userC = await UserProfileModel.findOneAndUpdate({username:username},{ $set : {calendar:{uploaded: true, uploadedDate: new Date(now).toUTCString()}}},{returnNewDocument: true});
-        console.log(userC);
+        let user_after = await UserProfileModel.findOneAndUpdate({username:username},{ $set : {calendar:{uploaded: true, uploadDate: new Date(now).toUTCString()}}},{new:true});
+        console.log(user_after);
 
-        return res.status(200).json(r_events);
+        return res.status(200).json(user_after);
     } catch(err) {
         console.log(err);
         if(err.code === 11000){
