@@ -9,6 +9,7 @@ const AuthController = require('../controllers/auth');
 
 router.post('/login', AuthController.login);
 router.post('/register', AuthController.register);
+router.post('/getUser', AuthController.getUser);
 router.post('/nearme', AuthController.setShowNearMe);
 router.get('/logout', middlewares.checkAuthentication, AuthController.logout);
 

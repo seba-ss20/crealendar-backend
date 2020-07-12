@@ -72,6 +72,33 @@ const register = async (req,res) => {
         }
     }
 };
+//TODO:: REMOVE
+const getUser = async (req,res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a username property'
+    });
+    let username = req.body.username;
+    try {
+        const user = await UserProfileModel.findOne({username: username});
+        res.status(200).json(user);
+
+    } catch(err) {
+        console.log(err);
+        if (err.code === 11000) {
+            return res.status(400).json({
+                error: 'User exists',
+                message: err.message
+            });
+        } else {
+            return res.status(500).json({
+                error: 'Internal server error',
+                message: err.message
+            });
+        }
+    }
+
+};
 const setShowNearMe = async (req,res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
         error: 'Bad Request',
@@ -115,5 +142,6 @@ module.exports = {
     login,
     register,
     logout,
-    setShowNearMe
+    setShowNearMe,
+    getUser //TODO:: REMOVE
 };
