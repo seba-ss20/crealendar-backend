@@ -27,7 +27,7 @@ const login = async (req,res) => {
         // if user is found and password is valid
         // create a token
         const token = jwt.sign({id: user._id, username: user.username}, config.JwtSecret, { expiresIn: "30d" });
-        return res.status(200).json({token: token, role: user.role});
+        return res.status(200).json({token: token, role: user.role, user: user});
     } catch(err) {
         return res.status(404).json({
             error: 'User Not Found',
