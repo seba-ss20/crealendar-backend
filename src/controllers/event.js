@@ -108,7 +108,7 @@ const listAll  = async (req, res) => {
 
 const listEvent = async (req, res) => {
     try {
-        let event = await EventModel.findById(req.params.id).exec();
+        let event = await EventModel.findById(req.params.eventId).exec();
         if (!event) return res.status(404).json({
             error: 'Not Found',
             message: `Event not found`
@@ -124,7 +124,7 @@ const listEvent = async (req, res) => {
 };
 const remove = async (req, res) => {
     try {
-        await EventModel.findByIdAndRemove(req.params.id).exec();
+        await EventModel.findByIdAndRemove(req.params.event_id).exec();
         return res.status(200).json({message: `Event with id${req.params.id} was deleted`});
     } catch(err) {
         return res.status(500).json({
@@ -142,7 +142,7 @@ const update = async (req, res) => {
     }
 
     try {
-        let event = await EventModel.findByIdAndUpdate(req.params.id, req.body, {
+        let event = await EventModel.findByIdAndUpdate(req.params.event_id, req.body, {
             new: true,
             runValidators: true
         }).exec();
@@ -156,12 +156,26 @@ const update = async (req, res) => {
     }
 };
 
+const listAllEventByUserId = async (req, res) => {
+    try {
+        let events = await EventModel.find({owner: req.params.userId}).exec();
+        return res.status(200).json(events);
+    } catch(err) {
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+    }
+};
+
+
 module.exports = {
     deleteCalendar,
     uploadCalendar,
     add,
     listAll,
     listEvent,
+    listAllEventByUserId,
     update,
     remove
 };

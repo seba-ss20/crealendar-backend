@@ -24,6 +24,12 @@ const userProfileSchema = mongoose.Schema({
 
     tags : [String],
     showNearMe: Boolean,
+    eventList: [{
+        event: {
+            type: String,
+            required: false
+        }
+    }]
 })
 
 // Hash the password before saving the user model

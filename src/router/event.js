@@ -1,5 +1,3 @@
-"use strict";
-
 const express = require('express');
 const router = express.Router();
 
@@ -7,15 +5,16 @@ const middlewares = require('../middleware');
 const EventController = require('../controllers/event');
 
 
-router.post('/:username', middlewares.checkAuthentication,EventController.uploadCalendar);
-router.post('/:username/:event_id',middlewares.checkAuthentication,EventController.add);
+router.post('/:username', EventController.uploadCalendar);
+router.post('/users/:userId/addEvent',EventController.add);
 
-router.get('/:username',middlewares.checkAuthentication,EventController.listAll);
-router.get('/:username/:event_id',middlewares.checkAuthentication,EventController.listEvent);
+router.get('users/:username',EventController.listAll);
+router.get('/:eventId',EventController.listEvent);
+router.get('/users/:userId',EventController.listAllEventByUserId);
 
-router.put('/:username/:event_id', middlewares.checkAuthentication,EventController.update);
+router.put('/users/events/:event_id',EventController.update);
 
-router.delete('/:username/:event_id', middlewares.checkAuthentication, EventController.remove);
-router.delete('/:username',middlewares.checkAuthentication,EventController.deleteCalendar);
+router.delete('/:event_id', EventController.remove);
+router.delete('/:username',EventController.deleteCalendar);
 
 module.exports = router;

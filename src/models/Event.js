@@ -1,11 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const eventSchema = mongoose.Schema ({
-	eventID: {
-		type: String,
-		required: true,
-		unique: true
-	},
 
 	name: {
 		type: String,
@@ -13,15 +8,14 @@ const eventSchema = mongoose.Schema ({
 	},
 
 	dateStart: {
-		type: String,
+		type: Date,
 		required: true,
 	},
 
 	dateEnd: {
-		type: String,
-		required: true,
+		type: Date,
+		required: false,
 	},
-
 
 	location: String,
 	recurrence: {
@@ -29,7 +23,7 @@ const eventSchema = mongoose.Schema ({
 		byDay: [String]
 	},
 	description: String,
-
+	price: Number,
 	capacity: Number,
 	numberOfParticipants: Number,
 
@@ -39,9 +33,12 @@ const eventSchema = mongoose.Schema ({
 	},
 	source: {
 		type: String,
-		required: true
+		required: false
 	},
-	tags: [String], // TODO :: Make it an array of numbers from Categories table.
+	tags: [{
+		data: String,
+		key: Number
+	}], // TODO :: Make it an array of numbers from Categories table.
 
 	// owner: {
 	// 	type: mongoose.Schema.Types.ObjectId,
@@ -51,7 +48,7 @@ const eventSchema = mongoose.Schema ({
 	// } // TODO:: Uncomment this part after fixing it.
 	owner:{
 		type: String,
-		required: true,
+		required: false,
 	}
 });
 

@@ -1,5 +1,3 @@
-"use strict";
-
 const express    = require('express');
 const bodyParser = require('body-parser');
 const helmet     = require('helmet');
@@ -22,7 +20,7 @@ api.use(middlewares.allowCrossDomain);
 // Basic route
 api.get('/', (req, res) => {
     res.json({
-        name: 'SEBA Master Movie Backend'
+        name: 'SEBA Master Crealendar Backend'
     });
 });
 
