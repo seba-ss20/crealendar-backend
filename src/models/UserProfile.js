@@ -21,6 +21,12 @@ const userProfileSchema = mongoose.Schema({
         uploaded: Boolean,
         uploadDate: String,
     },
+	mobile: {
+		type: Number
+	},
+	chatID: {
+		type: Number
+	},
 
     tags : [String],
     showNearMe: Boolean,

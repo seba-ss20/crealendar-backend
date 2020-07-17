@@ -14,7 +14,7 @@
     "bcryptjs": "2.4.3",
     "body-parser": "1.18.2",
     "express": "^4.17.1",
-    "helmet": "3.11.0",
+    "helmet": "^3.23.3",
     "jsonwebtoken": "8.1.1",
     "mongodb": "^3.5.8",
     "mongoose": "^5.9.18",

@@ -7,6 +7,8 @@ const middlewares = require('./middleware');
 const auth  = require('./router/auth');
 const event  = require('./router/event');
 const tag = require('./router/tag');
+const user = require('./router/user');
+const eventPage  = require('./router/eventPage');
 
 const api = express();
 
@@ -28,5 +30,7 @@ api.get('/', (req, res) => {
 api.use('/auth'  , auth);
 api.use('/event', event);
 api.use('/tag', tag);
+api.use('/tag', user);
+api.use('/eventPage', eventPage);
 
 module.exports = api;
