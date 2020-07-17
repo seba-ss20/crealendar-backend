@@ -45,8 +45,8 @@ const uploadCalendar = async (req,res) => {
 
             console.log('Processing Event ' + i);
             events[i]['source'] = 'calendar';
-            let doesEventExist = await EventModel.countDocuments({ eventID: events[i].eventID }).exec() > 0;
-            console.log( EventModel.countDocuments({ eventID: events[i].eventID }).exec());
+            let doesEventExist = await EventModel.countDocuments({ _id: events[i]._id }).exec() > 0;
+            console.log( EventModel.countDocuments({ _id: events[i]._id }).exec());
 
             if(!doesEventExist){
                 console.log('Inserting event '+ i + '' + events[i].name);
@@ -55,7 +55,7 @@ const uploadCalendar = async (req,res) => {
             }
             else{
                 console.log('Updating event '+ i + '' + events[i].name);
-                let filter = {eventID: events[i].eventID};
+                let filter = {_id: events[i]._id};
                 let u_event = await EventModel.findOneAndReplace(filter,events[i]);
             }
 

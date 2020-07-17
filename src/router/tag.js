@@ -5,15 +5,15 @@ const middlewares = require('../middleware');
 const TagController = require('../controllers/tag');
 
 
-router.post('/:username', middlewares.checkAuthentication,TagController.addTagToUser);
-router.post('/:event_id',middlewares.checkAuthentication,TagController.addTagToEvent);
-router.post('/set/:username',middlewares.checkAuthentication,TagController.setTagsOfUser);
+router.post('/:username', TagController.addTagToUser);
+router.post('/:event_id', TagController.addTagToEvent);
+router.post('/set/:username', TagController.setTagsOfUser);
 
-router.get('/:username',middlewares.checkAuthentication,TagController.getTagsOfUser);
-router.get('/:event_id',middlewares.checkAuthentication,TagController.getTagsOfEvent);
-router.get('/',middlewares.checkAuthentication,TagController.listTags);
+router.get('/:username', TagController.getTagsOfUser);
+router.get('/:event_id',TagController.getTagsOfEvent);
+router.get('/', TagController.listTags);
 
-router.delete('/:username',middlewares.checkAuthentication,TagController.removeTagFromUser);
-router.delete('/:event_id', middlewares.checkAuthentication, TagController.removeTagFromEvent);
+router.delete('/:username', TagController.removeTagFromUser);
+router.delete('/:event_id', TagController.removeTagFromEvent);
 
 module.exports = router;
