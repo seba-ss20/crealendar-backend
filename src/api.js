@@ -9,6 +9,7 @@ const event  = require('./router/event');
 const tag = require('./router/tag');
 const user = require('./router/user');
 const eventPage  = require('./router/eventPage');
+const promotion  = require('./router/promotion');
 
 const api = express();
 
@@ -32,5 +33,6 @@ api.use('/event', event);
 api.use('/tag', tag);
 api.use('/tag', user);
 api.use('/eventPage', eventPage);
+api.use('/promotion', promotion);
 
 module.exports = api;
