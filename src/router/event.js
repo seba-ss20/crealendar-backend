@@ -8,7 +8,7 @@ const EventController = require('../controllers/event');
 router.post('/:username', EventController.uploadCalendar);
 router.post('/users/:userId/addEvent',EventController.add);
 
-router.get('/:userId',EventController.listAll);
+router.get('/all',EventController.listAll);
 router.get('/:eventId',EventController.listEvent);
 router.get('/users/:userId',EventController.listAllEventByUserId);
 
