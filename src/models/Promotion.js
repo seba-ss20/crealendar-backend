@@ -8,24 +8,38 @@ const promotionSchema = mongoose.Schema ({
 		type: Number,
 		required: true
 	},
-	date: {
+	dateStart: {
 		type: Date,
-		required: true
+		required: true,
 	},
-	owner: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
-		required: true
+	status: {
+		type: String,
+		required: true,
 	},
-	content: {
+	source: {
+		type: String,
+		required: false
+	},
+	owner:{
+		type: String,
+		required: false,
+	},
+	description: {
 		type: String
 	},
-	fee: {
+	price: {
 		type: Number
 	},
-	keywords: [{
-		type: String
-	}],
+	tags: [{
+		data: String,
+		key: Number
+	}], // TODO :: Make it an array of numbers from Categories table.
+	// owner: {
+	// 	type: mongoose.Schema.Types.ObjectId,
+	// 	ref: 'User',
+	// 	required: true,
+	// 	unique: true
+	// } // TODO:: Uncomment this part after fixing it.
 })
 
 const Promotion = mongoose.model('Promotion', promotionSchema)
