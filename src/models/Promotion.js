@@ -40,7 +40,13 @@ const promotionSchema = mongoose.Schema ({
 	// 	required: true,
 	// 	unique: true
 	// } // TODO:: Uncomment this part after fixing it.
-})
+	//createdAt: {
+	//	type: Date,
+	//	default: Date.now
+	//},
+}, {timestamps: true})
+
+promotionSchema.index({createdAt: 1},{expireAfterSeconds: 86400*promotionSchema.duration});
 
 const Promotion = mongoose.model('Promotion', promotionSchema)
 
