@@ -96,6 +96,37 @@ const add = async (req, res) => {
         });
     }
 };
+const addUser = async (req, res) => {
+    console.log("HELOW WORLD");
+    if (Object.keys(req.body).length === 0) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body is empty'
+    });
+
+    try {
+        console.log(req.body);
+        let doesEventExist = await EventModel.countDocuments({ name: req.body.name, dateStart:req.body.dateStart, dateEnd: req.body.dateEnd}).exec() > 0;
+        console.log('Check if event exists!');
+
+        if(!doesEventExist){
+            console.log('Event DOES NOT Exists and we are adding user!');
+
+            return res.status(500).json({
+                error: 'Event not found'
+            });
+        }
+        console.log('Event Exists and we are adding user!');
+        let updated_event = await EventModel.findOneAndUpdate( {name: req.body.name, dateStart:req.body.dateStart,dateEnd:req.body.dateEnd},
+            { $push: { participants: req.params.userId } },{new:true}).exec();
+        console.log(updated_event);
+        return res.status(201).json(updated_event)
+    } catch(err) {
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+    }
+};
 const getImage = async (req,res) => {
     // TODO Check for file:
     let event = await EventModel.findById(req.params.eventId).exec();
@@ -250,6 +281,16 @@ const update = async (req, res) => {
 const listAllEventByUserId = async (req, res) => {
     try {
         let events = await EventModel.find({owner: req.params.userId}).exec();
+        let events_particip = await EventModel.find({participants: req.params.userId}).exec();
+        // console.log("Participated events");
+        // console.log(events_particip);
+
+        for(let i = 0; i < events_particip.length ; i++){
+            console.log('events_particip[i]');
+            console.log(events_particip[i]);
+            events.push(events_particip[i]);
+        }
+        // console.log(events);
         return res.status(200).json(events);
     } catch(err) {
         return res.status(500).json({
@@ -264,6 +305,7 @@ module.exports = {
     deleteCalendar,
     uploadCalendar,
     add,
+    addUser,
     addImage,
     getImage,
     listAll,

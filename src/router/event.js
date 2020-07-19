@@ -13,6 +13,7 @@ const upload = multer({
 
 router.post('/:username', EventController.uploadCalendar);
 router.post('/users/:userId/addEvent',EventController.add);
+router.post('/users/:userId/addUser',EventController.addUser);
 router.post('/users/:userId/addImage',upload.single("image"), EventController.addImage);
 
 router.get('/all',EventController.listAll);
