@@ -45,7 +45,35 @@ const addTagToUser = async (req,res) => {
 const addTagToEvent = async (req,res) => {
 
 };
-
+const addTagToPool = async (req,res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'tag')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a username property'
+    });
+    let tags = Object.assign({}, req.body.tags);
+    let assigned_tags = [];
+    try {
+        for(let i = 0 ; i < tags.length ; i++) {
+            let tag = tags[i];
+            let doesTagExist = await EventModel.countDocuments({ name: tag.name }).exec() > 0;
+            if(!doesTagExist){
+                console.log('Inserting tag '+ i + '' + tag.name);
+                let assigned_tag = await EventTagModel.create(tag);
+                assigned_tags.push(assigned_tag);
+            }
+            else{
+                console.log('Tag ' + tag.name+ ' already exists.');
+            }
+        }
+        return res.status(200).json(assigned_tags);
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+    }
+};
 const getTagsOfUser = async (req,res) => {
     if (!Object.prototype.hasOwnProperty.call(req.params, 'username')) return res.status(400).json({
         error: 'Bad Request',
@@ -94,6 +122,7 @@ const removeTagFromEvent = async (req,res) => {
 
 
 module.exports = {
+    addTagToPool,
     setTagsOfUser,
     addTagToUser,
     addTagToEvent,

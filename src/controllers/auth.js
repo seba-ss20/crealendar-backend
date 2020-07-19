@@ -2,6 +2,8 @@ const config     = require('../config');
 const UserProfileModel  = require('../models/UserProfile');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require("path");
+const fs = require('fs');
 
 const login = async (req,res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
@@ -75,6 +77,7 @@ const register = async (req,res) => {
 
         res.status(200).json({token: token, role: user.role});
     } catch(err) {
+        console.log(err);
         if (err.code == 11000) {
             return res.status(400).json({
                 error: 'User exists',
@@ -147,8 +150,104 @@ const setShowNearMe = async (req,res) => {
         }
     }
 };
+const getAvatar = async (req,res) => {
+    // TODO Check for file:
+    let user = await UserProfileModel.findOne({username:req.params.username}).exec();
+    console.log(user);
+    if(typeof user.avatar !== 'undefined'){
+        res.sendFile(user.avatar);
+    }
+};
+const addAvatar = async (req, res) => {
+    try {
+        console.log('Inside addAvatar');
+        let user_id  = req.body._id;
+        let image  = req.file;
 
+        if(!image){
+            console.log('Where is the image?');
+            return res.status(400).send({ message: 'Image not provided!' });
+        }
 
+        let path_arr = req.file.originalname.split('.');
+        let extension = path_arr[path_arr.length-1];
+
+        const tempPath = req.file.path;
+        const dirpath = path.join(__dirname, "/../../avatars/");
+        console.log('dirpath');
+        console.log(dirpath);
+        fs.access(dirpath,fs.constants.F_OK,(err)=> {
+            if(err){
+                console.log(dirpath + ' does not exists. Creating!')
+                fs.mkdir(dirpath, { recursive: true },err => {
+                    if(err){
+                        console.error(err);
+                    }
+                });
+            }
+        });
+        const targetPath = path.join(dirpath + user_id+"."+extension);
+        fs.access(targetPath, fs.constants.F_OK, (err) => {
+            if(err){
+                console.log(targetPath + ' does not exists. Creating!')
+            }
+            else{
+                console.log(targetPath + ' exists. Deleting!');
+                fs.unlink(targetPath, (err) => {
+                    if (err) throw err;
+                    console.log('successfully deleted '+targetPath);
+                });
+            }
+        });
+
+        fs.rename(tempPath, targetPath, (err) => {
+            if (err)
+            {
+                console.log(err);
+                return res.status(500).json({
+                    error:'Could not move file',
+                    message:err.message
+                });
+            }
+            else{
+                console.log("Successfully added avatar to " +targetPath);
+            }
+        });
+
+        let user = await UserProfileModel.findOneAndUpdate({username:user_id},{ $set : { avatar: targetPath}},{new:true});
+
+        return res.status(200).json(user);
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+    }
+};
+const addCommunication = async (req,res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a username property'
+    });
+    let mobile = req.body.mobile;
+    let chatid = req.body.chatid;
+
+    try{
+        let user = await UserProfileModel.findOneAndUpdate({username:req.body.username},{ $set : { mobile: mobile,chatID:chatid}},{new:true}).exec();
+        console.log(user);
+        res.status(200).json(user);
+    }
+    catch (e) {
+        console.log(err);
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+
+    }
+
+};
 const logout = (req, res) => {
     res.status(200).send({ token: null });
 };
@@ -157,7 +256,10 @@ const logout = (req, res) => {
 module.exports = {
     login,
     register,
+    addCommunication,
     logout,
     setShowNearMe,
+    addAvatar,
+    getAvatar,
     getUser //TODO:: REMOVE
 };

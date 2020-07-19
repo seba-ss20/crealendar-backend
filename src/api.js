@@ -21,10 +21,6 @@ api.use(bodyParser.json());
 api.use(bodyParser.urlencoded({ extended: false }));
 api.use(middlewares.allowCrossDomain);
 
-// // Static
-// console.log(imagePath);
-// api.use(express.static(imagePath));
-
 // Basic route
 api.get('/', (req, res) => {
     res.json({
