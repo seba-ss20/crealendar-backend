@@ -154,7 +154,9 @@ const getAvatar = async (req,res) => {
     // TODO Check for file:
     let user = await UserProfileModel.findOne({username:req.params.username}).exec();
     console.log(user);
-    res.sendFile(user.avatar);
+    if(typeof user.avatar !== 'undefined'){
+        res.sendFile(user.avatar);
+    }
 };
 const addAvatar = async (req, res) => {
     try {
