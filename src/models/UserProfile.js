@@ -30,7 +30,7 @@ const userProfileSchema = mongoose.Schema({
         uploadDate: String,
     },
 	mobile: {
-		type: Number
+		type: String
 	},
 	chatID: {
 		type: Number
