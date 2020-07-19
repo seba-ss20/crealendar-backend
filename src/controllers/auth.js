@@ -225,7 +225,29 @@ const addAvatar = async (req, res) => {
         });
     }
 };
+const addCommunication = async (req,res) => {
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
+        error: 'Bad Request',
+        message: 'The request body must contain a username property'
+    });
+    let mobile = req.body.mobile;
+    let chatid = req.body.chatid;
 
+    try{
+        let user = await UserProfileModel.findOneAndUpdate({username:req.body.username},{ $set : { mobile: mobile,chatID:chatid}},{new:true}).exec();
+        console.log(user);
+        res.status(200).json(user);
+    }
+    catch (e) {
+        console.log(err);
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+
+    }
+
+};
 const logout = (req, res) => {
     res.status(200).send({ token: null });
 };
@@ -234,6 +256,7 @@ const logout = (req, res) => {
 module.exports = {
     login,
     register,
+    addCommunication,
     logout,
     setShowNearMe,
     addAvatar,

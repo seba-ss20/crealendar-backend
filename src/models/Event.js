@@ -40,7 +40,7 @@ const eventSchema = mongoose.Schema ({
 		data: String,
 		key: Number
 	}], // TODO :: Make it an array of numbers from Categories table.
-
+	participants : [String],
 	// owner: {
 	// 	type: mongoose.Schema.Types.ObjectId,
 	// 	ref: 'User',

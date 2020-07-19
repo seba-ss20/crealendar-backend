@@ -12,6 +12,7 @@ const upload = multer({
 
 router.post('/login', AuthController.login);
 router.post('/uploadAvatar', upload.single("avatar"),AuthController.addAvatar);
+router.post('/addCommunication',AuthController.addCommunication);
 router.post('/register', AuthController.register);
 router.post('/getUser', AuthController.getUser);
 router.post('/nearme', AuthController.setShowNearMe);

@@ -5,6 +5,7 @@ const middlewares = require('../middleware');
 const TagController = require('../controllers/tag');
 
 
+router.post('/add', TagController.addTagToPool);
 router.post('/:username', TagController.addTagToUser);
 router.post('/:event_id', TagController.addTagToEvent);
 router.post('/set/:username', TagController.setTagsOfUser);
