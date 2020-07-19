@@ -3,6 +3,8 @@ const EventModel  = require('../models/Event');
 const UserProfileModel  = require('../models/UserProfile');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const path = require("path");
+const fs = require('fs');
 
 const deleteCalendar = async (req,res) => {
     if (!Object.prototype.hasOwnProperty.call(req.body, 'username')) return res.status(400).json({
@@ -94,6 +96,67 @@ const add = async (req, res) => {
         });
     }
 };
+const getImage = async (req,res) => {
+    // TODO Check for file:
+    let event = await EventModel.findById(req.params.eventId).exec();
+    res.sendFile(event.image);
+};
+const addImage = async (req, res) => {
+    try {
+
+        let event_id  = req.body._id;
+        let image  = req.file;
+
+        if(!image){
+            return res.status(400).send({ message: 'Image not provided!' });
+        }
+
+        let path_arr = req.file.originalname.split('.');
+        let extension = path_arr[path_arr.length-1];
+
+        const tempPath = req.file.path;
+        const dirpath = __dirname + "/../../images/";
+        await fs.mkdir(dirpath, { recursive: true },err => {
+            if(err){
+                console.error(err);
+            }
+        });
+
+        const targetPath = path.join(dirpath + event_id+"."+extension);
+        fs.access(targetPath, fs.constants.F_OK, (err) => {
+            if(err){
+                fs.unlink(targetPath, (err) => {
+                    if (err) throw err;
+                    console.log('successfully deleted '+targetPath);
+                });
+            }
+        });
+
+        fs.rename(tempPath, targetPath, (err) => {
+            if (err)
+            {
+                return res.status(500).json({
+                    error:'Could not move file',
+                    message:err.message
+                });
+            }
+            else{
+            }
+        });
+        let event = await EventModel.findByIdAndUpdate(event_id,{image:targetPath} , {
+            new: true,
+            runValidators: true
+        }).exec();
+
+        return res.status(200).json(event);
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+    }
+};
 const listAll  = async (req, res) => {
     try {
         let events = await EventModel.find({}).exec();
@@ -106,6 +169,22 @@ const listAll  = async (req, res) => {
     }
 };
 
+// const listEvent = async (req, res) => {
+//     try {
+//         let event = await EventModel.findById(req.params.eventId).exec();
+//         if (!event) return res.status(404).json({
+//             error: 'Not Found',
+//             message: `Event not found`
+//         });
+//
+//         return res.status(200).json(event)
+//     } catch(err) {
+//         return res.status(500).json({
+//             error: 'Internal Server Error',
+//             message: err.message
+//         });
+//     }
+// };
 const listEvent = async (req, res) => {
     try {
         let event = await EventModel.findById(req.params.eventId).exec();
@@ -173,6 +252,8 @@ module.exports = {
     deleteCalendar,
     uploadCalendar,
     add,
+    addImage,
+    getImage,
     listAll,
     listEvent,
     listAllEventByUserId,

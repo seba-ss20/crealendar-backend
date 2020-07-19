@@ -26,6 +26,7 @@ const eventSchema = mongoose.Schema ({
 	price: Number,
 	capacity: Number,
 	numberOfParticipants: Number,
+	image : String,
 
 	status: {
 		type: String,
@@ -48,7 +49,7 @@ const eventSchema = mongoose.Schema ({
 	// } // TODO:: Uncomment this part after fixing it.
 	owner:{
 		type: String,
-		required: false,
+		required: false
 	}
 });
 

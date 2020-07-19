@@ -18,7 +18,8 @@
     "jsonwebtoken": "8.1.1",
     "mongodb": "^3.5.8",
     "mongoose": "^5.9.18",
-    "mongoose-schema-extend": "^0.2.2"
+    "mongoose-schema-extend": "^0.2.2",
+    "multer": "^1.4.2"
   },
   "devDependencies": {
     "nodemon": "1.14.12"
