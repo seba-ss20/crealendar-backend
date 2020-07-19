@@ -1,5 +1,5 @@
 # crealendar-backend
 
 run:
-  npm install
-  node index.js
+  'npm install' then
+  'node index.js'
