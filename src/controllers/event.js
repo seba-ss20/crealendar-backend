@@ -116,15 +116,25 @@ const addImage = async (req, res) => {
 
         const tempPath = req.file.path;
         const dirpath = __dirname + "/../../images/";
-        await fs.mkdir(dirpath, { recursive: true },err => {
+
+        fs.access(dirpath,fs.constants.F_OK,(err)=> {
             if(err){
-                console.error(err);
+                console.log(dirpath + ' does not exists. Creating!')
+                fs.mkdir(dirpath, { recursive: true },err => {
+                    if(err){
+                        console.error(err);
+                    }
+                });
             }
         });
 
         const targetPath = path.join(dirpath + event_id+"."+extension);
         fs.access(targetPath, fs.constants.F_OK, (err) => {
             if(err){
+                console.log(targetPath + ' does not exists. Creating!')
+            }
+            else{
+                console.log(targetPath + ' exists. Deleting!');
                 fs.unlink(targetPath, (err) => {
                     if (err) throw err;
                     console.log('successfully deleted '+targetPath);
@@ -135,12 +145,14 @@ const addImage = async (req, res) => {
         fs.rename(tempPath, targetPath, (err) => {
             if (err)
             {
+                console.log(err);
                 return res.status(500).json({
                     error:'Could not move file',
                     message:err.message
                 });
             }
             else{
+                console.log("Successfully added image to " +targetPath);
             }
         });
         let event = await EventModel.findByIdAndUpdate(event_id,{image:targetPath} , {

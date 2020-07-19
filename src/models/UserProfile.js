@@ -37,6 +37,7 @@ const userProfileSchema = mongoose.Schema({
 	},
 
     tags : [String],
+    avatar : String,
     showNearMe: Boolean,
     eventList: [{
         event: {
