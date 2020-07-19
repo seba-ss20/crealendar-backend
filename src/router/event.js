@@ -15,14 +15,15 @@ router.post('/:username', EventController.uploadCalendar);
 router.post('/users/:userId/addEvent',EventController.add);
 router.post('/users/:userId/addUser',EventController.addUser);
 router.post('/users/:userId/addImage',upload.single("image"), EventController.addImage);
+router.post('/users/:userId/deleteUser',EventController.deleteUserFromEvent);
 
 router.get('/all',EventController.listAll);
 router.get('/:eventId',EventController.listEvent);
 router.get('/images/:eventId',EventController.getImage);
+
 router.get('/users/:userId',EventController.listAllEventByUserId);
 
 router.put('/users/events/:event_id',EventController.update);
-
 router.delete('/:event_id', EventController.remove);
 router.delete('/:username',EventController.deleteCalendar);
 

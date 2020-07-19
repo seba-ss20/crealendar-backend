@@ -130,7 +130,12 @@ const addUser = async (req, res) => {
 const getImage = async (req,res) => {
     // TODO Check for file:
     let event = await EventModel.findById(req.params.eventId).exec();
-    res.sendFile(event.image);
+    if(typeof event.image !== "undefined"){
+        res.sendFile(event.image);
+    }
+    else{
+        console.log('Image path is undefined');
+    }
 };
 const addImage = async (req, res) => {
     try {
@@ -255,6 +260,26 @@ const remove = async (req, res) => {
         });
     }
 };
+const deleteUserFromEvent = async (req, res) => {
+    try {
+        let doesEventExist = await EventModel.countDocuments({ name: req.body.name, dateStart:req.body.dateStart, dateEnd: req.body.dateEnd}).exec() > 0;
+        if(!doesEventExist){
+            console.log("Event does not exists");
+            return res.status(500).json({
+                error: 'Event not found'
+            });
+        }
+        let updated_event = await EventModel.findOneAndUpdate( {name: req.body.name, dateStart:req.body.dateStart,dateEnd:req.body.dateEnd},
+            { $pull: { participants: req.params.userId } },{new:true}).exec();
+
+        return res.status(200).json(updated_event);
+    } catch(err) {
+        return res.status(500).json({
+            error: 'Internal server error',
+            message: err.message
+        });
+    }
+};
 const update = async (req, res) => {
     if (Object.keys(req.body).length === 0) {
         return res.status(400).json({
@@ -312,5 +337,6 @@ module.exports = {
     listEvent,
     listAllEventByUserId,
     update,
-    remove
+    remove,
+    deleteUserFromEvent
 };
