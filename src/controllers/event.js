@@ -130,7 +130,12 @@ const addUser = async (req, res) => {
 const getImage = async (req,res) => {
     // TODO Check for file:
     let event = await EventModel.findById(req.params.eventId).exec();
-    res.sendFile(event.image);
+    if(typeof event.image !== "undefined"){
+        res.sendFile(event.image);
+    }
+    else{
+        console.log('Image path is undefined');
+    }
 };
 const addImage = async (req, res) => {
     try {
