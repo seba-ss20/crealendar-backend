@@ -17,11 +17,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 client = MongoClient('mongodb://localhost:27017')
 
-db = client.crealender_recommender
+db = client.crealendardb
 
 con_check = str(db)
 
-if con_check.find('crealender_recommender') != int(-1):
+if con_check.find('crealendardb') != int(-1):
 
     print('...Connected')
 
@@ -32,6 +32,13 @@ else:
 # 1. Populate the rec system - take a JSON and return success
 # 2. Recommend similar users - take a user ID and returns a Json {user_ids: [21,43]} of User IDs.
 # 3. Recommend Events (optional only-nearby) - take a user ID and returns top 10 events (only-nearby -> location and interests as a pref, if not -> preferences)
+
+userprofiles = db["userprofiles"]
+print("here")
+allUsers = userprofiles.find({"role": "User"})
+allOrganizers = userprofiles.find({"role": "Organizer"})
+for x in allOrganizers:
+  print(x)
 
 big_df = pd.DataFrame({
     'event_id': [
@@ -116,7 +123,7 @@ big_df = pd.DataFrame({
 
 # Generating a list of businesses features
 # In order to generate users preference vectors first we need to extract all
-# features (categories) along which these vectors will be propagating...
+# features (tags) along which these vectors will be propagating...
 
 
 def retreive_features(big_df):

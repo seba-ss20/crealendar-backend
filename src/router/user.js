@@ -42,18 +42,5 @@ router.get('/users/all', async (req, res) => {
 	}
 })
 
-router.get('/users/user_info', async (req, res) => {
-    try {
-        const _id = req.query._id;
-		const user = await User.findOne({_id: _id})
-		if (!user) {
-			res.status(400).send({ error: "No user with this id"})
-			return
-		}
-        res.send({ "username": user.username, "mobile": user.mobile, "chatID": user.chatID})
-    } catch (error) {
-        res.status(500).end()
-    }
-})
 
 module.exports = router;

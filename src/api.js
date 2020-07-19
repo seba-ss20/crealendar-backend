@@ -33,7 +33,7 @@ api.get('/', (req, res) => {
 api.use('/auth'  , auth);
 api.use('/event', event);
 api.use('/tag', tag);
-api.use('/tag', user);
+api.use(user);
 api.use('/eventPage', eventPage);
 api.use('/promotion', promotion);
 

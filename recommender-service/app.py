@@ -9,8 +9,9 @@ import pandas as pd
 import seaborn as sb
 import matplotlib.pyplot as plt
 from flask import request, jsonify
+from bson.objectid import ObjectId
 
-from helpers import *
+from .helpers import *
 
 from flask import Flask
 app = Flask(__name__)
@@ -19,17 +20,25 @@ app = Flask(__name__)
 
 client = MongoClient('mongodb://localhost:27017')
 
-db = client.crealender_recommender
+db = client.crealendardb
 
 con_check = str(db)
 
-if con_check.find('crealender_recommender') != int(-1):
+if con_check.find('crealendardb') != int(-1):
 
     print('...Connected')
 
 else:
 
     print('...Connection Failed')
+    
+collection = db["userprofiles"]
+print("here")
+allUsers = collection.find({"role": "User"})
+allUserIds = collection["_id"]
+allOrganizers = collection.find({"role": "Organizer"})
+for x in allUserIds:
+  print(x)
 
 
 def getSimilarEventsforUser(user_id):
