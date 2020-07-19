@@ -38,6 +38,7 @@ const login = async (req,res) => {
 
 
 const register = async (req,res) => {
+
     if (!Object.prototype.hasOwnProperty.call(req.body, 'password')) return res.status(400).json({
         error: 'Bad Request',
         message: 'The request body must contain a password property'
@@ -48,14 +49,29 @@ const register = async (req,res) => {
         message: 'The request body must contain a username property'
     });
 
+    if (!Object.prototype.hasOwnProperty.call(req.body, 'firstname') || !Object.prototype.hasOwnProperty.call(req.body, 'lastname'))
+        return res.status(400).json({
+        error: 'Bad Requesty',
+        message: 'The request body must contain name and surname property'
+    });
     const user = Object.assign(req.body, {password: req.body.password});
+
+    if(user.firstname.length > 1)
+        user.firstname = user.firstname.charAt(0).toUpperCase() + user.firstname.slice(1).toLowerCase();
+    else
+        user.firstname = user.firstname.charAt(0).toUpperCase();
+
+    if(user.lastname.length > 1)
+        user.lastname = user.lastname.charAt(0).toUpperCase() + user.lastname.slice(1).toLowerCase();
+    else
+        user.lastname = user.lastname.charAt(0).toUpperCase();
 
     try {
 
         let retUser = await UserProfileModel.create(user);
         // if user is registered without errors
         // create a token
-        const token = jwt.sign({id: user._id, username: user.username}, config.JwtSecret, { expiresIn: "30d" });
+        const token = jwt.sign({id: user._id, username: user.username, }, config.JwtSecret, { expiresIn: "30d" });
 
         res.status(200).json({token: token, role: user.role});
     } catch(err) {
